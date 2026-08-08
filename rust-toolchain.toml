@@ -1,0 +1,6 @@
+[toolchain]
+# The GUI front-end pulls in egui 0.34 (the only line compatible with the
+# ratatui 0.30 the TUI is built on), which requires rustc >= 1.92. Pinned here
+# so a plain `cargo build` works out of the box instead of failing on an older
+# default toolchain.
+channel = "1.96.0"

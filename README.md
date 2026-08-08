@@ -6,10 +6,14 @@ for requests, `.vars` files for environments — so everything can be committed,
 diffed, and shared through a normal git repository. There is no hosted
 service and nothing runs outside your machine.
 
-It ships as a single binary with two front-ends:
+It ships as a single binary with three front-ends:
 
 - **Terminal UI** (default) — a full interactive client for building,
   editing, running and organizing requests.
+- **GUI** (`--gui`) — the very same interface in a desktop window, for when
+  there is no terminal to hand. It renders the terminal UI itself rather than
+  reimplementing it, so the layout, themes and every keyboard shortcut below
+  apply unchanged.
 - **Headless CLI** (`-c`/`--collection`) — runs a collection end-to-end and
   prints the results, for scripts and CI.
 
@@ -31,8 +35,12 @@ From the `paperboy` directory:
 
 ```sh
 cargo run            # launch the terminal UI
+cargo run -- --gui   # launch the same UI in a desktop window
 cargo build --release
 ```
+
+Building requires Rust 1.92 or newer (the repository pins 1.96 via
+`rust-toolchain.toml`).
 
 ## Core concepts
 

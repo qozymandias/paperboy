@@ -1,11 +1,12 @@
-//! PaperBoy — a Rust-native API client (Postman alternative). Two front-ends
-//! over one core: a terminal UI (default), and a headless CLI runner
-//! (`-c collection.hurl [-e environment.vars]`).
+//! PaperBoy — a Rust-native API client (Postman alternative). Front-ends over
+//! one core: a terminal UI (default), the same UI in a window (`--gui`), and a
+//! headless CLI runner (`-c collection.hurl [-e environment.vars]`).
 
 mod cli;
 mod collection;
 mod environment;
 mod git_remote;
+mod gui;
 mod http;
 mod hurl;
 mod i18n;
@@ -28,12 +29,14 @@ use clap::Parser;
     version,
     about = "PaperBoy — a Rust-native API client (a Postman alternative).",
     long_about = "PaperBoy — a Rust-native API client (a Postman alternative).\n\n\
-Runs in one of three modes:\n\
+Runs in one of four modes:\n\
 \x20 TUI  (default)          a terminal user interface\n\
+\x20 GUI  (--gui)            the same interface in a desktop window\n\
 \x20 CLI  (-c/--collection)  run a Hurl or Postman collection headlessly, then exit\n\
 \x20 Report (-r/--report)    run a PaperTrail report against a collection, then exit",
     after_help = "Examples:\n\
 \x20 paperboy                            Launch the terminal UI (default)\n\
+\x20 paperboy --gui                      Launch the same UI in a desktop window\n\
 \x20 paperboy -c collection.hurl         Run a collection headlessly\n\
 \x20 paperboy -c collection.hurl -e environment.vars   Run a collection with an environment\n\
 \x20 paperboy -c collection.hurl --batch    Run as one batch (preserves cookies across requests)\n\
@@ -84,6 +87,12 @@ struct Cli {
     #[arg(short = 'r', long, value_name = "FILE")]
     report: Option<String>,
 
+    /// Show the terminal UI in a desktop window instead of the terminal. Same
+    /// interface, same keys, same layout — it renders the identical UI into a
+    /// window, so it needs no terminal at all.
+    #[arg(long)]
+    gui: bool,
+
     /// With `-r`: expand the report and show what it would do without sending
     /// any request (no HTTP). Handy before a large run.
     #[arg(long)]
@@ -123,6 +132,15 @@ fn main() {
             );
         }
         std::process::exit(cli::run(collection, cli.env.into_iter().next(), cli.batch));
+    }
+
+    // GUI: the terminal UI in a window.
+    if cli.gui {
+        if let Err(e) = gui::run() {
+            eprintln!("gui error: {e}");
+            std::process::exit(1);
+        }
+        std::process::exit(0);
     }
 
     // Terminal UI (the default).

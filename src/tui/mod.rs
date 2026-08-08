@@ -1,10 +1,15 @@
-//! Terminal UI (ratatui) mirroring the GUI: same panels, endpoints, collections,
-//! environments, i18n and theming, driven by the keyboard instead of the mouse.
+//! Terminal UI (ratatui): panels, endpoints, collections, environments, i18n
+//! and theming, driven by the keyboard and the mouse.
 //!
-//! Launched with `-r` / `--ratatui`.
+//! This is the default front-end. `crate::gui` renders this exact UI into a
+//! desktop window instead of a terminal, reusing [`app::TuiApp`] and
+//! [`draw::draw`] as-is, so anything added here shows up in both.
 
-mod app;
-mod draw;
+// `app` and `draw` are reachable from the crate root because the GUI front-end
+// (`crate::gui`) drives the very same `TuiApp` through the very same `draw`,
+// rather than reimplementing either.
+pub(crate) mod app;
+pub(crate) mod draw;
 mod editor;
 mod git_save;
 mod input;

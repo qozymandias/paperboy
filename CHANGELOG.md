@@ -8,6 +8,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Releases before 0.1.2 predate this changelog and are not recorded here.
 
 
+## [0.1.10] - 2026-08-05
+
+### Added
+
+- **GUI front-end (`paperboy --gui`).** The terminal UI in a desktop window,
+  with no terminal involved. It is not a second interface: the window renders
+  the same `TuiApp` through the same drawing code via a software terminal
+  backend, so the layout, panels, borders, themes, i18n and every keybinding
+  are identical to the TUI by construction. Mouse and keyboard input are
+  translated back into the events the terminal front-end already handles, so
+  selections, wizards and overlays behave the same in both.
+
+### Changed
+
+- The project now pins a Rust 1.96 toolchain (`rust-toolchain.toml`). The GUI
+  depends on egui 0.34 — the only release compatible with the ratatui version
+  the UI is built on — which requires rustc 1.92 or newer.
+
+
 ## [0.1.9] - 2026-08-03
 
 ### Fixed
